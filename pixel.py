@@ -33,22 +33,20 @@ class UV:
             # Левый канал
             for i in range(left_brightness):
                 if self.LEDS_INLINE - 1 - i >= 0:  # Проверка, чтобы избежать выхода за пределы
-                    color_intensity_l = int(255 * (i / left_brightness)) if left_brightness > 0 else 0
-                    # Пропорции для цвета
-                    red_intensity = int(color_intensity_l * self.RED_RATIO)
-                    green_intensity = int(color_intensity_l * self.GREEN_RATIO)
-                    blue_intensity = int(color_intensity_l * self.BLUE_RATIO)
-                    self.NEO_PIXEL[self.LEDS_INLINE  - 1 - i + self.LEDS_OFFSET] = (red_intensity, green_intensity, blue_intensity)
+                    color_intensity = int(255 * (i / left_brightness)) if left_brightness > 0 else 0
+                    self.NEO_PIXEL[self.LEDS_INLINE - 1 - i + self.LEDS_OFFSET] = self.__colorize(color_intensity)
 
             # Правый канал
             for i in range(right_brightness):
                 if self.LEDS_INLINE + i < self.LEDS_INLINE * 2:  # Проверка, чтобы избежать выхода за пределы
-                    color_intensity_r = int(255 * (i / right_brightness)) if right_brightness > 0 else 0
-                    # Пропорции для цвета
-                    red_intensity = int(color_intensity_r * self.RED_RATIO)
-                    green_intensity = int(color_intensity_r * self.GREEN_RATIO)
-                    blue_intensity = int(color_intensity_r * self.BLUE_RATIO)
-                    self.NEO_PIXEL[self.LEDS_INLINE + i + self.LEDS_OFFSET] = (red_intensity, green_intensity, blue_intensity)
+                    color_intensity = int(255 * (i / right_brightness)) if right_brightness > 0 else 0
+                    self.NEO_PIXEL[self.LEDS_INLINE + i + self.LEDS_OFFSET] = self.__colorize(color_intensity)
 
             self.NEO_PIXEL.write()  # Обновление LED-ленты
             time.sleep(0.0001)  # Пауза для стабильности
+    
+    def __colorize(self, color_intensity):
+        red_intensity = int(color_intensity * self.RED_RATIO)
+        green_intensity = int(color_intensity * self.GREEN_RATIO)
+        blue_intensity = int(color_intensity * self.BLUE_RATIO)
+        return (red_intensity, green_intensity, blue_intensity)
