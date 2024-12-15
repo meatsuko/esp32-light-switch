@@ -3,6 +3,7 @@ import neopixel
 import time
 
 from adc import Analyzer
+from beacon import Beacon
 
 class UV:
     NEO_PIXEL = None
@@ -23,10 +24,13 @@ class UV:
         self.LEDS_INLINE = (LEDS_COUNT - LEDS_OFFSET) // 2
         self.SILENT = False
 
-    def loop(self, analyzer: Analyzer):
+    def loop(self, analyzer: Analyzer, beacon: Beacon):
         while True:
             left_brightness = min(int(analyzer.left_level / (4095 / self.LEDS_INLINE)), self.LEDS_INLINE)
             right_brightness = min(int(analyzer.right_level / (4095 / self.LEDS_INLINE)), self.LEDS_INLINE)
+
+            if beacon:
+                beacon.broadcast(analyzer.left_level, analyzer.right_level)
                
             if analyzer.silent:
                 if not self.SILENT:
